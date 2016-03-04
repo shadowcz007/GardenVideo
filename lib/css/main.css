@@ -67,10 +67,10 @@ text-align: center;
     z-index: 1
 }
     .swiper-slide .H1title {
-     width: 100%;
+     width: 100%;max-width: 320px;
     }
       .swiper-slide .H1subtitle {
-     width: 100%;
+     width: 100%;max-width: 240px;
     }
     .swiper-slide .title {
         font-size: 1.5em;
