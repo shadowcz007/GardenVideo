@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>QRstyle</title>
 <meta http-equiv="Content-Type">
       <meta content="text/html; charset=utf-8"> 
@@ -9,11 +10,11 @@
       <meta name="format-detection" content="telephone=no">
       <meta name="format-detection" content="email=no">
       <meta name="msapplication-tap-highlight" content="no" />
-      <script src="js/lib/jquery-3.1.0.min.js"></script>
+      <script src="http://www.fandesj.com/yifind/Public/js/lib/jquery-3.1.0.min.js"></script>
       <!--微信JS-SDK-->
 		<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-		<script type="text/javascript" src="js/lib/jquery.qrcode.min.js"></script>
-      <script src="js/lib/easeljs-NEXT.min.js"></script>
+		<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/lib/jquery.qrcode.min.js"></script>
+      <script src="http://www.fandesj.com/yifind/Public/js/lib/easeljs-NEXT.min.js"></script>
 
 		
 		<!--输入框自适应-->
@@ -49,10 +50,10 @@
 			</div>
 			<a href="javascript:void(0);" class="weui_media_box weui_media_appmsg">
 		                <div class="weui_media_hd">
-		                    <img id="userPic" class="weui_media_appmsg_thumb" src="img/1.jpg" ><canvas style="display:none" id="userPicCanvas"></canvas>
+		                    <img id="userPic" class="weui_media_appmsg_thumb" ><canvas style="display:none" id="userPicCanvas"></canvas>
 		                </div>
 		                <div class="weui_media_bd" style="text-align: left;">
-		                    <h4 class="weui_media_title">hi~shadow</h4>
+		                    <h4 class="weui_media_title" id="userinfo">hi~</h4>
 		                    <p class="weui_media_desc">记录下今日所得吧！</p>
 		                </div>
 	        </a>
@@ -87,6 +88,8 @@
 var _boundx=$(window).width();
 	var _boundy=$(window).height();
 var stage;
+ $('#userinfo').text('hi~'+getQueryString("userName"));
+$('#userPic').attr('src',getQueryString("userPicSrc"));
 function init() {	
 
 	$('#myQR').attr({'width':280,'height':480});
@@ -96,7 +99,7 @@ function init() {
 	stage = new createjs.Stage("myQR");
 	
 	var  image = new Image();
-    image.src = "img/wineGlasses.png";
+    image.src = "http://www.fandesj.com/yifind/Public/img/QRimg/wineGlasses.png";
     image.onload = handleImageLoad;
 
    };
@@ -115,11 +118,11 @@ function init() {
 		QRtemplete.scaleY=QRscaleY;
 
 		QRtemplete.x=30;
-		QRtemplete.y=420-QRscaleY*QRtemplete.getBounds().height;
+		QRtemplete.y=390-QRscaleY*QRtemplete.getBounds().height;
 		stage.addChild(QRtemplete);
 
 
-
+/*
 	var userPic=new createjs.Bitmap(getBase64Image());
 		
 		userPic.scaleX=44/userPic.getBounds().width;
@@ -127,10 +130,10 @@ function init() {
 		userPic.x=12;
 		userPic.y=24;
 		stage.addChild(userPic);
-
-	var userinfo = new createjs.Text('shadow的所得', "38px Georgia", "black");
+*/
+	var userinfo = new createjs.Text(getQueryString("userName")+'的所得', "38px Georgia", "black");
 		 userinfo.x = 12;
-		 userinfo.y=72;
+		 userinfo.y=42;
 		 userinfo.scaleX=0.5;
 		 userinfo.scaleY=0.5;
 		 
@@ -139,7 +142,7 @@ function init() {
 
 	var userdate = new createjs.Text(useDate(), "12px Georgia", "gray");
 		 userdate.x =12;
-		 userdate.y=98;
+		 userdate.y=68;
 		 
 
 		 stage.addChild(userdate);
@@ -197,7 +200,7 @@ function tranQR(){
 		myQRBitmap.scaleX=0.45;
 		myQRBitmap.scaleY=0.5;
 		myQRBitmap.x=160;
-		myQRBitmap.y=180;
+		myQRBitmap.y=150;
 		myQRBitmap.rotation=32;
 
 		var matrix = new createjs.ColorMatrix().adjustHue(180).adjustSaturation(100);
@@ -315,6 +318,22 @@ ca.onclick = function  (e) {
 	*/
 var autotext=$('.weui_textarea').get(0);
  autoTextarea(autotext);
+
+ /* 
+  string 字符串; 
+  str 指定字符; 
+  split(),用于把一个字符串分割成字符串数组; 
+  split(str)[0],读取数组中索引为0的值（第一个值）,所有数组索引默认从0开始; 
+ */
+function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        
+        if (r !== null){
+        	return decodeURIComponent(r[2])
+        	};        	
+        return null;
+    };	
 	
 </script>
 
