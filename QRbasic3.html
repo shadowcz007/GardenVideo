@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>我的所得</title>
+<meta http-equiv="Content-Type">
+      <meta content="text/html; charset=utf-8"> 
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="format-detection" content="telephone=no">
+      <meta name="format-detection" content="email=no">
+      <meta name="msapplication-tap-highlight" content="no" />
+     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+		<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/lib/jquery-qrcode-0.14.0.js"></script>
+     <script src="//cdn.bootcss.com/EaselJS/0.8.0/easeljs.min.js"></script>
+
+		
+		<!--输入框自适应-->
+		<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/autoTextarea.js"></script>
+		
+
+     <link href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css" rel="stylesheet">
+	<style>
+	.pannel{
+		width: 90%;
+		margin-left: 5%;
+		text-align: center;
+		margin-top: 8px;
+	}
+#myQR{
+	border: 1px solid gray;
+}
+#QRorigin{
+	display: none;
+}
+	</style>
+
+
+</head>
+<body onload="init();">
+
+<div class="pannel" id="container">
+
+	<div class="cell">
+			<div class="hd">
+				<br>
+			    <h2 class="page_title">所得 <br><small style="color:#B3B3B3">今日感悟 | 知行合一</small></h2>
+			</div>
+			<a href="javascript:void(0);" class="weui_media_box weui_media_appmsg">
+		                <div class="weui_media_hd">
+		                    <img id="userPic" class="weui_media_appmsg_thumb" ><canvas style="display:none" id="userPicCanvas"></canvas>
+		                </div>
+		                <div class="weui_media_bd" style="text-align: left;">
+		                    <h4 class="weui_media_title" id="userinfo">hi~</h4>
+		                    <p class="weui_media_desc">记录下今日所得吧！</p>
+		                </div>
+	        </a>
+	        
+			<div class="weui_cells weui_cells_form">
+			        <div class="weui_cell">
+
+
+			            <div class="weui_cell_bd weui_cell_primary">
+			                <textarea id="myGW"class="weui_textarea" placeholder="输入我的感悟" rows="3" style="background-color:rgb(237, 237, 237);color:rgb(29, 29, 29);" ></textarea>
+			                
+			            </div>
+			        </div>
+		    </div>
+			<ul class="weui_media_info weui_media_box weui_media_text" style="list-style: none;color:gray">
+                   
+                    <li class="weui_media_info_meta " id='useDate'></li>
+                    
+            </ul>
+	</div>
+	<br>
+	<button class="weui_btn weui_btn_plain_primary" onclick="javascript:setTimeout(tranQR,500);tranQR();alert('已生成专属二维码，长按保存图片');">保存</button>
+ 
+	</div>
+	<div class="pannel" style="width:100%;margin-left:0">
+		<img src="" alt="" id="myQRImage" style="width:90%;">
+
+	</div>
+	<canvas id="myQR" style="display:none"></canvas>
+	<div id="qrcodeCanvas" style="display:none"></div>
+<script>
+var _boundx=$(window).width();
+var _boundy=$(window).height();
+var stage;
+ 	$('#userinfo').text('hi~'+getQueryString("userName"));
+	$('#userPic').attr('src',getQueryString("userPicSrc"));
+
+
+
+function init() {	
+
+	$('#myQR').attr({'width':480,'height':480});
+
+
+	var myQR=$('#myQR').get(0);
+	stage = new createjs.Stage("myQR");
+	
+	var image = new Image();
+    image.src = "http://www.fandesj.com/yifind/Public/img/QRimg/qixi.png";
+    image.onload = handleImageLoad;
+
+   };
+
+   function handleImageLoad(){
+   	   	var bggraphics = new createjs.Graphics().f("white").ss(1,"round").s("gray").dr(0, 0, 480, 480);
+   		var bg=new createjs.Shape(bggraphics);
+   			stage.addChild(bg);
+
+		var QRtemplete =new createjs.Bitmap(event.target);
+		
+
+/*	var QRscaleX=480/QRtemplete.getBounds().width;
+	var QRscaleY=480/QRtemplete.getBounds().height;
+		QRtemplete.scaleX=QRscaleX;
+		QRtemplete.scaleY=QRscaleY;
+*/
+		QRtemplete.x=0;
+		QRtemplete.y=0;
+		stage.addChild(QRtemplete);
+
+
+/*
+	var userPic=new createjs.Bitmap(getBase64Image());
+		
+		userPic.scaleX=44/userPic.getBounds().width;
+		userPic.scaleY=44/userPic.getBounds().width;
+		userPic.x=12;
+		userPic.y=24;
+		stage.addChild(userPic);
+*/
+	var userinfo = new createjs.Text(getQueryString("userName")+'的《所得》', "28px Georgia", "black");
+		 userinfo.x = 24;
+		 userinfo.y=24;
+	var containerText=new createjs.Container();
+	stage.addChild(containerText);
+
+
+			containerText.addChild(userinfo);
+		 
+
+	var userdate = new createjs.Text(useDate(), "20px Georgia", "black");
+		 userdate.x =24;
+		 userdate.y=66;
+		 
+
+		 containerText.addChild(userdate);
+	var tipsText = new createjs.Text("长按图片，识别二维码查阅", "14px Georgia", "black");
+		 tipsText.x = 24;
+		 tipsText.y=455;
+		 
+
+		 containerText.addChild(tipsText);
+
+	var containerText2=containerText.children;
+for (var i = containerText2.length - 1; i >= 0; i--) {
+	 var containclone=containerText2[i].clone();
+	 containclone.x=containerText2[i].x-1;
+	  containclone.y=containerText2[i].y-2;
+	 containclone.filters = [new createjs.ColorFilter(255, 255, 255, 1, 255, 255, 255) 
+			 		];
+
+		containclone.cache(0,0, 480, 640);
+    	stage.addChild(containclone);
+};
+
+
+	console.log(containerText.children);
+					
+					
+
+
+		
+
+		stage.update();
+
+	};
+
+
+var QRContent;
+function tranQR(){
+	QRContent='';
+	var content= $('#myGW').val();
+
+	
+	if (content=='') {
+
+		content= $('textarea').val()+'平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
+
+
+	}else{
+		content= $('textarea').val()+'                              >>>>>>凡得提供技术服务,微信服务号fandeshijian';
+
+
+	};
+
+	
+	console.log(content);
+	console.log(QRContent);
+
+		
+		var QRContent=$('#qrcodeCanvas').qrcode({
+			fill: "#162538",
+        	// render method: 'canvas', 'image' or 'div'
+		    render: 'canvas',
+
+		    // version range somewhere in 1 .. 40
+		    minVersion: 1,
+		    maxVersion: 40,
+
+		    // error correction level: 'L', 'M', 'Q' or 'H'
+		    ecLevel: 'L',
+
+		    // offset in pixel if drawn onto existing canvas
+		    left: 0,
+		    top: 0,
+
+		    // size in pixel
+		    size: 150,
+
+		    
+
+		    // background color or image element, null for transparent background
+		    background: '#FFF1A6',
+
+		    // content
+		    text: content,
+
+		    // corner radius relative to module width: 0.0 .. 0.5
+		    radius: 0,
+
+		    // quiet zone in modules
+		    quiet: 0,
+
+		    // modes
+		    // 0: normal
+		    // 1: label strip
+		    // 2: label box
+		    // 3: image strip
+		    // 4: image box
+		    mode: 2,
+
+		    mSize: 0.1,
+		    mPosX: 0.5,
+		    mPosY: 0.5,
+
+		    label: '所得',
+		    fontname: 'sans',
+		    fontcolor: 'black',
+
+		    image: null
+			
+		});	
+
+
+		if (QRContent) {
+
+			creatImgResult();
+
+		}else{
+
+			alert('保存失败，请再次保存')
+
+
+		};	
+
+};
+
+
+function creatImgResult(){
+	var canvas=$('#qrcodeCanvas canvas').last().get(0);
+		
+	
+		
+		if ($(canvas).attr('id')=='true') {
+			console.log($(canvas).attr('id')=='true');
+				var data = canvas.toDataURL();
+				if ($('#QRorigin')) {
+
+					$('#QRorigin').remove();
+					$('body').append('<img id=QRorigin src='+data+'>');
+
+				};
+
+
+			var myQRBitmap = new createjs.Bitmap(data);
+					myQRBitmap.rotation=0;//35
+					//12
+					//1
+					//0.8
+					
+					myQRBitmap.x=167;//300
+					myQRBitmap.y=247;
+
+			/*
+			var myQRBitmap2=myQRBitmap.clone();
+					myQRBitmap2.x=301;
+					myQRBitmap2.y=292;
+				
+			
+
+
+				myQRBitmap2.filters = [new createjs.ColorFilter(0, 0, 0, 0.8, 0, 0, 0) 
+			 		];
+
+				 		 myQRBitmap2.cache(0,0, 240, 240);
+	
+
+			stage.addChild(myQRBitmap2);
+ */			stage.addChild(myQRBitmap);		
+/*
+				var image2 = new Image();
+				    image2.src = "http://www.fandesj.com/yifind/Public/img/QRimg/deskForestup.png";
+				    image2.onload = handleImageLoad2;
+
+function handleImageLoad2(){
+		var QRtemplete =new createjs.Bitmap(event.target);
+
+		QRtemplete.x=125;
+		QRtemplete.y=285;
+		stage.addChild(QRtemplete);
+		stage.update();	
+};
+*/
+						
+
+									 
+
+				
+				$(canvas).attr('id','false');
+				stage.update();
+				var myQRImage=$('#myQR').get(0).toDataURL("image/png");
+				$('#myQRImage').attr('src',myQRImage);				
+
+
+		};
+
+		
+}
+
+
+
+function getBase64Image() {
+      var canvas1 = $('#userPicCanvas').get(0);
+      var img=$('#userPic').get(0);
+      $('#userPicCanvas').attr({'width':img.width,'height':img.height});  
+
+      var ctx1 = canvas1.getContext("2d");
+      ctx1.drawImage(img, 0, 0, img.width, img.height);     
+      return canvas1.toDataURL();
+      // return dataURL.replace("data:image/png;base64,", "");
+    }
+
+
+function useDate(){
+	var myDate = new Date();
+	
+	var month=myDate.getMonth()+1;
+	var userDate='此时'+myDate.getFullYear()+'/'+month+'/'+myDate.getDate()+',此刻'+myDate.getHours()+':'+myDate.getMinutes();
+	
+
+	return 	userDate;
+		/*
+		myDate.getFullYear();    //获取完整的年份(4位,1970-????)
+		myDate.getMonth();       //获取当前月份(0-11,0代表1月)
+		myDate.getDate();        //获取当前日(1-31)
+		myDate.getDay();         //获取当前星期X(0-6,0代表星期天)
+		
+		myDate.getHours();       //获取当前小时数(0-23)
+		myDate.getMinutes();     //获取当前分钟数(0-59)	
+		*/
+		
+};
+
+
+
+
+
+
+
+$('#useDate').text(useDate());
+
+/*
+
+	var ca=$('#qrcodeCanvas canvas').get(0);
+var ctx = ca.getContext('2d');
+ctx.arc(100,100,50,0,Math.PI*2);
+ctx.fillStyle = "rgba(234,1,1,0.6)";
+ctx.fill();
+ctx.beginPath();
+ctx.fillStyle = 'rgba(1,234,1,0.7)';
+ctx.fillRect(100,100,70,100);
+ca.onclick = function  (e) {
+	var x = e.clientX,
+		y = e.clientY,
+		caL = ca.getBoundingClientRect().left,
+		caT = ca.getBoundingClientRect().top;
+	var X = x-caL, Y = y-caT;
+	// console.log('X:'+X+',Y:'+Y);
+	var imagedata = ctx.getImageData(X,Y,10,10);
+	for(var i=0,dl = imagedata.data.length;i
+<dl;i+=4) {
+		imagedata.data[i] = 255-imagedata.data[i];
+		imagedata.data[i+1] = 255-imagedata.data[i];
+		imagedata.data[i+2] = 255-imagedata.data[i];
+	}
+	ctx.putImageData(imagedata,X,Y);
+	// jg.innerHTML = data.data;
+	console.log(imagedata);
+}
+	*/
+var autotext=$('.weui_textarea').get(0);
+ autoTextarea(autotext);
+
+ /* 
+  string 字符串; 
+  str 指定字符; 
+  split(),用于把一个字符串分割成字符串数组; 
+  split(str)[0],读取数组中索引为0的值（第一个值）,所有数组索引默认从0开始; 
+ */
+function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        
+        if (r !== null){
+        	return decodeURIComponent(r[2])
+        	};        	
+        return null;
+    };	
+	
+</script>
+
+</body>
+</html>
