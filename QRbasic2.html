@@ -132,35 +132,48 @@ function init() {
 		userPic.y=24;
 		stage.addChild(userPic);
 */
-	var userinfo = new createjs.Text(getQueryString("userName")+'的《所得》', "28px Georgia", "white");
+	var userinfo = new createjs.Text(getQueryString("userName")+'的《所得》', "28px Georgia", "black");
 		 userinfo.x = 24;
 		 userinfo.y=24;
-	
-	var userinfo2=userinfo.clone();
-					userinfo2.x=26;
-					userinfo2.y=26;
+	var containerText=new createjs.Container();
+	stage.addChild(containerText);
 
 
-		 userinfo2.filters = [new createjs.ColorFilter(0, 0, 0, 0.8, 0, 0, 0) 
-			 		];
+			containerText.addChild(userinfo);
+		 
 
-			userinfo2.cache(0,0, 340, 60);
-
-			stage.addChild(userinfo2);
-		 stage.addChild(userinfo);
-
-	var userdate = new createjs.Text(useDate(), "20px Georgia", "white");
+	var userdate = new createjs.Text(useDate(), "20px Georgia", "black");
 		 userdate.x =24;
 		 userdate.y=66;
 		 
 
-		 stage.addChild(userdate);
-	var tipsText = new createjs.Text("长按图片，识别二维码查阅", "18px Georgia", "white");
+		 containerText.addChild(userdate);
+	var tipsText = new createjs.Text("长按图片，识别二维码查阅", "18px Georgia", "black");
 		 tipsText.x = 24;
 		 tipsText.y=600;
 		 
 
-		 stage.addChild(tipsText);
+		 containerText.addChild(tipsText);
+
+	var containerText2=containerText.children;
+for (var i = containerText2.length - 1; i >= 0; i--) {
+	 var containclone=containerText2[i].clone();
+	 containclone.x=containerText2[i].x-1;
+	  containclone.y=containerText2[i].y-2;
+	 containclone.filters = [new createjs.ColorFilter(255, 255, 255, 1, 255, 255, 255) 
+			 		];
+
+		containclone.cache(0,0, 480, 640);
+    	stage.addChild(containclone);
+};
+
+
+	console.log(containerText.children);
+					
+					
+
+
+		
 
 		stage.update();
 
@@ -190,7 +203,7 @@ function tranQR(){
 
 		
 		var QRContent=$('#qrcodeCanvas').qrcode({
-			fill: "#5aad45",
+			fill: "#21403F",
         	// render method: 'canvas', 'image' or 'div'
 		    render: 'canvas',
 
@@ -211,7 +224,7 @@ function tranQR(){
 		    
 
 		    // background color or image element, null for transparent background
-		    background: null,
+		    background: '#CBD34D',
 
 		    // content
 		    text: content,
@@ -236,7 +249,7 @@ function tranQR(){
 
 		    label: '所得',
 		    fontname: 'sans',
-		    fontcolor: 'white',
+		    fontcolor: '#21403F',
 
 		    image: null
 			
@@ -274,18 +287,18 @@ function creatImgResult(){
 
 
 			var myQRBitmap = new createjs.Bitmap(data);
-					myQRBitmap.rotation=36;
-					myQRBitmap.skewX=15;
-					myQRBitmap.skewY=1;
-					myQRBitmap.scaleY=0.75;
+					myQRBitmap.rotation=35;//35
+					myQRBitmap.skewX=12;//12
+					myQRBitmap.skewY=1;//1
+					myQRBitmap.scaleY=0.8;//0.8
 					myQRBitmap.scaleX=1;
-					myQRBitmap.x=300;
+					myQRBitmap.x=300;//300
 					myQRBitmap.y=290;
 
-			
+			/*
 			var myQRBitmap2=myQRBitmap.clone();
-					myQRBitmap.x=298;
-					myQRBitmap.y=288;
+					myQRBitmap2.x=301;
+					myQRBitmap2.y=292;
 				
 			
 
@@ -297,7 +310,7 @@ function creatImgResult(){
 	
 
 			stage.addChild(myQRBitmap2);
-			stage.addChild(myQRBitmap);		
+ */			stage.addChild(myQRBitmap);		
 
 				var image2 = new Image();
 				    image2.src = "http://www.fandesj.com/yifind/Public/img/QRimg/deskForestup.png";
@@ -318,6 +331,7 @@ function handleImageLoad2(){
 
 				
 				$(canvas).attr('id','false');
+				stage.update();
 				var myQRImage=$('#myQR').get(0).toDataURL("image/png");
 				$('#myQRImage').attr('src',myQRImage);				
 
