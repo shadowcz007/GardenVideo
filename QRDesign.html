@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>QRDesign</title>
+	<meta name="description" content="help you to design qrcode easily.">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/png" href="dummy.png">
+	<link rel="apple-touch-icon-precomposed" type="image/png" href="dummy.png">
+	
+	<link href="http://www.fandesj.com/yifind/Public/css/QRstyles.css" rel="stylesheet">
+
+	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/autoTextarea.js"></script>
+	<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/lib/jquery-qrcode-0.14.0.js"></script>
+	<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/desginQRcode.js"></script>
+	
+</head>
+<body>
+	<div id="container"></div>
+	<div class="control left">
+		<a id="banner" href="">QRcode Design</a>
+		<hr>
+		<label for="render" style="display:none">渲染模式</label>
+		<select id="render" style="display:none">
+			<option value="canvas" selected="selected">画布</option>
+			<option value="image">图片</option>
+			<option value="div">div</option>
+		</select>
+<hr>
+	<label for="size">二维码尺寸</label>
+	<input id="size" type="range" value="400" min="100" max="1000" step="50">
+	<label for="fill">前景色</label>
+	<input id="fill" type="color" value="#333333">
+	<label for="background">背景色</label>
+	<input id="background" type="color" value="#ffffff">
+	<label for="text">内容</label>
+	<textarea id="text">http</textarea>
+<hr>
+<label for="minversion">MIN VERSION:</label>
+<input id="minversion" type="range" value="6" min="1" max="10" step="1">
+<label for="eclevel">容错率</label>
+<select id="eclevel">
+				<option value="L">L - 低 (7%)</option>
+				<option value="M">M - 中 (15%)</option>
+				<option value="Q">Q - 高 (25%)</option>
+				<option value="H" selected="selected">H - 最高 (30%)</option>
+</select>
+	<label for="quiet">内边距</label>
+	<input id="quiet" type="range" value="1" min="0" max="4" step="1">
+	<label for="radius">圆滑度</label>
+	<input id="radius" type="range" value="50" min="0" max="50" step="10"></div>
+	<div class="control right">
+	<label for="mode">样式</label>
+<select id="mode">
+	<option value="0">0 - 纯码</option>
+	<option value="1">1 - 文字标签1</option>
+	<option value="2" selected="selected">2 - 文字标签2</option>
+	<option value="3">3 - 图形标签1</option>
+	<option value="4">4 - 图形标签2</option>
+</select>
+<hr>
+	<label for="msize">标签大小</label>
+	<input id="msize" type="range" value="11" min="0" max="40" step="1">
+	<label for="mposx">标签水平位置</label>
+	<input id="mposx" type="range" value="50" min="0" max="100" step="1">
+	<label for="mposy">标签垂直位置</label>
+	<input id="mposy" type="range" value="50" min="0" max="100" step="1">
+<hr>
+	<label for="label">LOGO</label>
+	<input id="label" type="text" value="jQuery.qrcode">
+	<label for="font">字体</label>
+	<input id="font" type="text" value="Ubuntu">
+	<label for="fontcolor">字体颜色</label>
+	<input id="fontcolor" type="color" value="#ff9818">
+<hr>
+	<label for="image">上传图片，作为图形标签</label>
+	<input id="image" type="file">
+</div>
+	<img id="img-buffer" src="dummy.png">
+	<script src="/_assets_e7011ab250df6b5158f1968cf474c7510e2450d9/js/ga.js"></script>
+</body>
+</html>
