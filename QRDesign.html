@@ -14,7 +14,7 @@
 	<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
 	<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/autoTextarea.js"></script>
 	<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/lib/jquery-qrcode-0.14.0.js"></script>
-	<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/desginQRcode.js"></script>
+	<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/lib/designQRcode.js"></script>
 	
 </head>
 <body>
@@ -37,6 +37,11 @@
 	<input id="background" type="color" value="#ffffff">
 	<label for="text">内容</label>
 	<textarea id="text">http</textarea>
+	<script type="text/javascript">
+		var autotext=$('#text').get(0);
+ 			autoTextarea(autotext);
+
+	</script>
 <hr>
 <label for="minversion">MIN VERSION:</label>
 <input id="minversion" type="range" value="6" min="1" max="10" step="1">
@@ -55,21 +60,21 @@
 	<label for="mode">样式</label>
 <select id="mode">
 	<option value="0">0 - 纯码</option>
-	<option value="1">1 - 文字标签1</option>
-	<option value="2" selected="selected">2 - 文字标签2</option>
-	<option value="3">3 - 图形标签1</option>
-	<option value="4">4 - 图形标签2</option>
+	<option value="1">1 - 文字LOGO1</option>
+	<option value="2" selected="selected">2 - 文字LOGO2</option>
+	<option value="3">3 - 图形LOGO1</option>
+	<option value="4">4 - 图形LOGO2</option>
 </select>
 <hr>
-	<label for="msize">标签大小</label>
+	<label for="msize">LOGO大小</label>
 	<input id="msize" type="range" value="11" min="0" max="40" step="1">
-	<label for="mposx">标签水平位置</label>
+	<label for="mposx">LOGO水平位置</label>
 	<input id="mposx" type="range" value="50" min="0" max="100" step="1">
-	<label for="mposy">标签垂直位置</label>
+	<label for="mposy">LOGO垂直位置</label>
 	<input id="mposy" type="range" value="50" min="0" max="100" step="1">
 <hr>
 	<label for="label">LOGO</label>
-	<input id="label" type="text" value="jQuery.qrcode">
+	<input id="label" type="text" value="QRDesign">
 	<label for="font">字体</label>
 	<input id="font" type="text" value="Ubuntu">
 	<label for="fontcolor">字体颜色</label>
@@ -79,6 +84,6 @@
 	<input id="image" type="file">
 </div>
 	<img id="img-buffer" src="dummy.png">
-	<script src="/_assets_e7011ab250df6b5158f1968cf474c7510e2450d9/js/ga.js"></script>
+	
 </body>
 </html>
