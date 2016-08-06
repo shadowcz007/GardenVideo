@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>我的所得</title>
+<meta http-equiv="Content-Type">
+      <meta content="text/html; charset=utf-8"> 
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="format-detection" content="telephone=no">
+      <meta name="format-detection" content="email=no">
+      <meta name="msapplication-tap-highlight" content="no" />
+     <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript" src="http://www.fandesj.com/yifind/Public/js/lib/jquery-qrcode-0.14.0.js"></script>
+     <script src="//cdn.bootcss.com/EaselJS/0.8.0/easeljs.min.js"></script>	
+     <link href="//cdn.bootcss.com/weui/0.4.3/style/weui.min.css" rel="stylesheet">
+	<style>
+	.pannel{
+		width: 90%;
+		margin-left: 5%;
+		text-align: center;
+		margin-top: 8px;
+	}
+#myQR{
+	border: 1px solid gray;
+}
+#QRorigin{
+	display: none;
+}
+	</style>
+</head>
+<body>
+	<div class="pannel" style="width:100%;margin-left:0">
+	<a class="weui_btn weui_btn_plain_primary" onclick="javascript:window.location.reload();">生成二维码</a>
+	
+	</div>
+	<div class="pannel" style="width:100%;margin-left:0;">
+	
+		<img src="" id="myQRImage" style="width:100%;">
+	</div>
+	<canvas id="myQR" style="display:none"></canvas>
+	
+<script>
+
+  	var _myQR={};
+	_myQR._boundx=$(window).width();
+	_myQR._boundy=$(window).height();
+	_myQR.x=480;
+	_myQR.y=800;
+	_myQR.QRsize=215;
+	_myQR.jq=$('#myQR');
+	_myQR.jq.attr({'width':_myQR.x,'height':_myQR.y});
+	_myQR.dom=_myQR.jq.get(0);
+	_myQR.templete=new Image();
+	_myQR.templete.src="http://www.fandesj.com/yifind/Public/img/QRimg/jimi.png";
+	
+	_myQR.colorwhite=["white","black"];
+	_myQR.color3="#ca8b01";//qr的fill颜色
+	_myQR.color4="#fffcb4";//// background color or image element, null for transparent background
+	_myQR.rotation=0;
+	_myQR.BitmapX=168;
+	_myQR.BitmapY=420;
+	_myQR.username=getQueryString("userName");
+	_myQR.userPic=getQueryString("userPicSrc");
+	_myQR.userinfo=_myQR.username+"的《所得》";
+	_myQR.userdate=useDate();
+	_myQR.tipsText="长按图片，识别二维码查阅";
+	_myQR.QRContent=getQueryString("content");
+
+	_myQR.url64;
+
+	var stage;
+		stage = new createjs.Stage(_myQR.dom);
+  	
+  	tranQR(onloadImage);
+            
+  
+function onloadImage(){
+    _myQR.templete.onload = handleImageLoad;
+};
+
+function handleImageLoad(){
+   	   	var bggraphics = new createjs.Graphics().f("white").ss(1,"round").s("gray").dr(0, 0,_myQR.x,_myQR.y);
+   		var bg=new createjs.Shape(bggraphics);
+   			stage.addChild(bg);
+
+		var QRtemplete =new createjs.Bitmap(event.target);		
+		QRtemplete.x=0;
+		QRtemplete.y=0;
+		stage.addChild(QRtemplete);
+
+		stageReady();
+	};
+
+
+function stageReady(){
+		/*
+			var userPic=new createjs.Bitmap(getBase64Image());
+				
+				userPic.scaleX=44/userPic.getBounds().width;
+				userPic.scaleY=44/userPic.getBounds().width;
+				userPic.x=12;
+				userPic.y=24;
+				stage.addChild(userPic);
+		*/
+
+			var userinfo = new createjs.Text(_myQR.userinfo, "28px Georgia", _myQR.colorwhite[1]);
+				 userinfo.x=24;
+				 userinfo.y=24;
+			var containerText=new createjs.Container();
+			stage.addChild(containerText);
+			containerText.addChild(userinfo);
+			var userdate = new createjs.Text(_myQR.userdate, "20px Georgia", _myQR.colorwhite[1]);
+			console.log(_myQR.userdate);
+				 userdate.x=24;
+				 userdate.y=66;
+				 containerText.addChild(userdate);
+
+			var tipsText = new createjs.Text(_myQR.tipsText, "14px Georgia", _myQR.colorwhite[1]);
+				 tipsText.x = 24;
+				 tipsText.y=_myQR.y-32;
+				 containerText.addChild(tipsText);
+
+			var containerText2=containerText.children;
+
+			for (var i = containerText2.length - 1; i >= 0; i--) {
+				 var containclone=containerText2[i].clone();
+				 containclone.x=containerText2[i].x-1;
+				  containclone.y=containerText2[i].y-2;
+				 containclone.filters = [new createjs.ColorFilter(255,255,255,1,255,255,255) 
+						 		];
+
+					containclone.cache(0,0,_myQR.x,_myQR.y);
+			    	stage.addChild(containclone);
+			};
+				
+				stage.update();
+
+				creatImgResult();
+};
+
+
+function tranQR(e){
+		var qrcodeCanvas=$('<canvas id="qrcodeCanvas" width="300" height="300" style="display:none"></canvas>');
+
+		var QRContent=qrcodeCanvas.qrcode({
+			fill: _myQR.color3,
+        	// render method: 'canvas', 'image' or 'div'
+		    render: 'canvas',
+
+		    // version range somewhere in 1 .. 40
+		    minVersion: 1,
+		    maxVersion: 40,
+
+		    // error correction level: 'L', 'M', 'Q' or 'H'
+		    ecLevel: 'L',
+
+		    // offset in pixel if drawn onto existing canvas
+		    left: 0,
+		    top: 0,
+
+		    // size in pixel
+		    size:_myQR.QRsize,
+
+		    // background color or image element, null for transparent background
+		    background: _myQR.color4,
+
+		    // content
+		    text: _myQR.QRContent,
+
+		    // corner radius relative to module width: 0.0 .. 0.5
+		    radius: 0,
+
+		    // quiet zone in modules
+		    quiet: 1,
+
+		    // modes
+		    // 0: normal
+		    // 1: label strip
+		    // 2: label box
+		    // 3: image strip
+		    // 4: image box
+		    mode: 2,
+
+		    mSize: 0.1,
+		    mPosX: 0.5,
+		    mPosY: 0.5,
+
+		    label: '所得',
+		    fontname: 'sans',
+		    fontcolor: _myQR.colorwhite[1],
+		    image: null
+		});
+		
+		_myQR.url64=$(QRContent).get(0).toDataURL();
+		console.log(_myQR.url64);
+		return e();	
+};
+
+
+function creatImgResult(){
+				
+				
+			var myQRBitmap = new createjs.Bitmap(_myQR.url64);
+				myQRBitmap.rotation=_myQR.rotation;//35
+					//12
+					//1
+					//0.8
+					
+					myQRBitmap.x=_myQR.BitmapX;//300
+					myQRBitmap.y=_myQR.BitmapY;
+
+			/*
+			var myQRBitmap2=myQRBitmap.clone();
+					myQRBitmap2.x=301;
+					myQRBitmap2.y=292;
+				
+				myQRBitmap2.filters = [new createjs.ColorFilter(0, 0, 0, 0.8, 0, 0, 0) 
+			 		];
+
+				 		 myQRBitmap2.cache(0,0, 240, 240);
+	
+			stage.addChild(myQRBitmap2);
+ */			
+ 					stage.addChild(myQRBitmap);		
+/*
+				var image2 = new Image();
+				    image2.src = "http://www.fandesj.com/yifind/Public/img/QRimg/deskForestup.png";
+				    image2.onload = handleImageLoad2;
+
+function handleImageLoad2(){
+		var QRtemplete =new createjs.Bitmap(event.target);
+
+		QRtemplete.x=125;
+		QRtemplete.y=285;
+		stage.addChild(QRtemplete);
+		stage.update();	
+};
+*/
+				stage.update();
+				var myQRImage=$('#myQR').get(0).toDataURL("image/png");
+				$('#myQRImage').attr('src',myQRImage);				
+		
+}
+
+
+
+function getBase64Image() {
+      var canvas1 = $('#userPicCanvas').get(0);
+      var img=$('#userPic').get(0);
+      $('#userPicCanvas').attr({'width':img.width,'height':img.height});  
+
+      var ctx1 = canvas1.getContext("2d");
+      ctx1.drawImage(img, 0, 0, img.width, img.height);     
+      return canvas1.toDataURL();
+      // return dataURL.replace("data:image/png;base64,", "");
+    }
+
+
+function useDate(){
+	var myDate = new Date();
+	
+	var month=myDate.getMonth()+1;
+	var userDate='此时'+myDate.getFullYear()+'/'+month+'/'+myDate.getDate()+',此刻'+myDate.getHours()+':'+myDate.getMinutes();
+	return 	userDate;
+		/*
+		myDate.getFullYear();    //获取完整的年份(4位,1970-????)
+		myDate.getMonth();       //获取当前月份(0-11,0代表1月)
+		myDate.getDate();        //获取当前日(1-31)
+		myDate.getDay();         //获取当前星期X(0-6,0代表星期天)
+		
+		myDate.getHours();       //获取当前小时数(0-23)
+		myDate.getMinutes();     //获取当前分钟数(0-59)	
+		*/
+		
+};
+
+function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);       
+        if (r !== null){
+        	return decodeURIComponent(r[2])
+        	};        	
+        return null;
+    };	
+	
+</script>
+
+</body>
+</html>
