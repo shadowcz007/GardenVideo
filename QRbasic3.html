@@ -73,15 +73,15 @@
             </ul>
 	</div>
 	<br>
-	<button class="weui_btn weui_btn_plain_primary" onclick="javascript:setTimeout(tranQR,500);tranQR();alert('已生成专属二维码，长按保存图片');">保存</button>
+	<button class="weui_btn weui_btn_plain_primary" onclick="javascript:tranQR();">保存</button>
  
 	</div>
 	<div class="pannel" style="width:100%;margin-left:0">
-		<img src="" alt="" id="myQRImage" style="width:90%;">
+		<img src="" id="myQRImage" style="width:90%;">
 
 	</div>
-	<canvas id="myQR" style="display:none"></canvas>
-	<div id="qrcodeCanvas" style="display:none"></div>
+	<canvas id="myQR" style=""></canvas>
+	<canvas id="qrcodeCanvas" width='300' height='300'></canvas>
 <script>
 	var _myQR={};
 	_myQR._boundx=$(window).width();
@@ -186,10 +186,9 @@ function stageReady(){
 
 
 function readContent(){
-		
 		if (_myQR.QRContent=='') {
 
-			_myQR.QRContent= $('textarea').val()+'平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
+			_myQR.QRContent='平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
 		}else{
 			_myQR.QRContent= $('textarea').val()+'                              >>>>>>凡得提供技术服务,微信服务号fandeshijian';
 		};
@@ -247,27 +246,19 @@ function tranQR(){
 		    fontcolor: _myQR.color1,
 		    image: null
 		});
-		if (QRContent) {
+		
 			creatImgResult();
-		}else{
-			alert('保存失败，请再次保存')
-		};	
 
 };
 
 
 function creatImgResult(){
-	var canvas=$('#qrcodeCanvas canvas').last().get(0);
+	var canvas=$('#qrcodeCanvas');
 			
-		if ($(canvas).attr('id')=='true') {
-			console.log($(canvas).attr('id')=='true');
-				var data = canvas.toDataURL();
-				if ($('#QRorigin')) {
-
-					$('#QRorigin').remove();
-					$('body').append('<img id=QRorigin src='+data+'>');
-
-				};
+		
+			
+				var data = canvas.attr('url64');
+				
 
 
 			var myQRBitmap = new createjs.Bitmap(data);
@@ -307,11 +298,10 @@ function handleImageLoad2(){
 };
 */
 				
-				$(canvas).attr('id','false');
 				stage.update();
 				var myQRImage=$('#myQR').get(0).toDataURL("image/png");
 				$('#myQRImage').attr('src',myQRImage);				
-		};
+		
 }
 
 

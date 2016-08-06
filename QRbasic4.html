@@ -78,7 +78,7 @@
 
 	</div>
 	<canvas id="myQR" style="display:none"></canvas>
-	<div id="qrcodeCanvas" style="display:none"></div>
+	<canvas id="qrcodeCanvas" width="300" height="300" style="display:none"></canvas>
 <script>
 	var _myQR={};
 	_myQR._boundx=$(window).width();
@@ -185,7 +185,7 @@ function readContent(){
 		
 		if (_myQR.QRContent=='') {
 
-			_myQR.QRContent= $('textarea').val()+'平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
+			_myQR.QRContent='平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
 		}else{
 			_myQR.QRContent= $('textarea').val()+'                              >>>>>>凡得提供技术服务,微信服务号fandeshijian';
 		};
@@ -243,27 +243,19 @@ function tranQR(){
 		    fontcolor: _myQR.colorwhite[0],
 		    image: null
 		});
-		if (QRContent) {
-			creatImgResult();
-		}else{
-			alert('保存失败，请再次保存')
-		};	
+		creatImgResult();
+		
 
 };
 
 
 function creatImgResult(){
-	var canvas=$('#qrcodeCanvas canvas').last().get(0);
+	var canvas=$('#qrcodeCanvas');
 			
-		if ($(canvas).attr('id')=='true') {
-			console.log($(canvas).attr('id')=='true');
-				var data = canvas.toDataURL();
-				if ($('#QRorigin')) {
-
-					$('#QRorigin').remove();
-					$('body').append('<img id=QRorigin src='+data+'>');
-
-				};
+		 
+			
+				var data =canvas.attr('url64');
+				
 
 
 			var myQRBitmap = new createjs.Bitmap(data);
@@ -303,11 +295,11 @@ function handleImageLoad2(){
 };
 */
 				
-				$(canvas).attr('id','false');
+				
 				stage.update();
 				var myQRImage=$('#myQR').get(0).toDataURL("image/png");
 				$('#myQRImage').attr('src',myQRImage);				
-		};
+		
 }
 
 
