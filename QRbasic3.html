@@ -37,7 +37,7 @@
 
 
 </head>
-<body onload="init();">
+<body>
 
 <div class="pannel" id="container">
 
@@ -83,127 +83,126 @@
 	<canvas id="myQR" style="display:none"></canvas>
 	<div id="qrcodeCanvas" style="display:none"></div>
 <script>
-var _boundx=$(window).width();
-var _boundy=$(window).height();
-var stage;
- 	$('#userinfo').text('hi~'+getQueryString("userName"));
-	$('#userPic').attr('src',getQueryString("userPicSrc"));
+	var _myQR={};
+	_myQR._boundx=$(window).width();
+	_myQR._boundy=$(window).height();
+	_myQR.x=480;
+	_myQR.y=480;
+	_myQR.QRsize=150;
+	_myQR.jq=$('#myQR');
+	_myQR.dom=_myQR.jq.get(0);
+	_myQR.templete=new Image();
+	_myQR.templete.src="http://www.fandesj.com/yifind/Public/img/QRimg/qixi.png";
+	_myQR.color1="black";//fontcolor
+	_myQR.color2="white";
+	_myQR.color3="#162538";//qr的fill颜色
+	_myQR.color4="#FFF1A6";//// background color or image element, null for transparent background
+	_myQR.rotation=0;
+	_myQR.BitmapX=167;
+	_myQR.BitmapY=247;
+
+	_myQR.username=getQueryString("userName");
+	_myQR.userPic=getQueryString("userPicSrc");
+	_myQR.userinfo=_myQR.username+"的《所得》";
+	_myQR.userdate=useDate();
+	_myQR.tipsText="长按图片，识别二维码查阅";
+	_myQR.QRContentJQ=$('#myGW');
+	_myQR.QRContent= _myQR.QRContentJQ.val();
+	_myQR.QRContentJQ.bind('propertychange',readContent);
+	_myQR.QRContentJQ.bind('focus',readContent);
+	var stage = new createjs.Stage(_myQR.dom);
+
+	$('#userinfo').text('hi~'+_myQR.username);
+	$('#userPic').attr('src',_myQR.userPic);
+	$('#useDate').text(_myQR.userDate);
+	var autotext=$('.weui_textarea').get(0);
+ 		autoTextarea(autotext);
 
 
-
-function init() {	
-
-	$('#myQR').attr({'width':480,'height':480});
-
-
-	var myQR=$('#myQR').get(0);
-	stage = new createjs.Stage("myQR");
+	_myQR.jq.attr({'width':_myQR.x,'height':_myQR.y});
 	
-	var image = new Image();
-    image.src = "http://www.fandesj.com/yifind/Public/img/QRimg/qixi.png";
-    image.onload = handleImageLoad;
+    _myQR.templete.onload = handleImageLoad;
 
-   };
+
 
    function handleImageLoad(){
-   	   	var bggraphics = new createjs.Graphics().f("white").ss(1,"round").s("gray").dr(0, 0, 480, 480);
+   	   	var bggraphics = new createjs.Graphics().f("white").ss(1,"round").s("gray").dr(0, 0,_myQR.x,_myQR.y);
    		var bg=new createjs.Shape(bggraphics);
    			stage.addChild(bg);
 
-		var QRtemplete =new createjs.Bitmap(event.target);
-		
-
-/*	var QRscaleX=480/QRtemplete.getBounds().width;
-	var QRscaleY=480/QRtemplete.getBounds().height;
-		QRtemplete.scaleX=QRscaleX;
-		QRtemplete.scaleY=QRscaleY;
-*/
+		var QRtemplete =new createjs.Bitmap(event.target);		
 		QRtemplete.x=0;
 		QRtemplete.y=0;
 		stage.addChild(QRtemplete);
 
-
-/*
-	var userPic=new createjs.Bitmap(getBase64Image());
-		
-		userPic.scaleX=44/userPic.getBounds().width;
-		userPic.scaleY=44/userPic.getBounds().width;
-		userPic.x=12;
-		userPic.y=24;
-		stage.addChild(userPic);
-*/
-	var userinfo = new createjs.Text(getQueryString("userName")+'的《所得》', "28px Georgia", "black");
-		 userinfo.x = 24;
-		 userinfo.y=24;
-	var containerText=new createjs.Container();
-	stage.addChild(containerText);
+		return stageReady();
+	};
 
 
+function stageReady(){
+		/*
+			var userPic=new createjs.Bitmap(getBase64Image());
+				
+				userPic.scaleX=44/userPic.getBounds().width;
+				userPic.scaleY=44/userPic.getBounds().width;
+				userPic.x=12;
+				userPic.y=24;
+				stage.addChild(userPic);
+		*/
+
+			var userinfo = new createjs.Text(_myQR.userinfo, "28px Georgia", _myQR.color1);
+				 userinfo.x=24;
+				 userinfo.y=24;
+			var containerText=new createjs.Container();
+			stage.addChild(containerText);
 			containerText.addChild(userinfo);
-		 
+			var userdate = new createjs.Text(_myQR.userdate, "20px Georgia", _myQR.color1);
+			console.log(_myQR.userdate);
+				 userdate.x=24;
+				 userdate.y=66;
+				 containerText.addChild(userdate);
 
-	var userdate = new createjs.Text(useDate(), "20px Georgia", "black");
-		 userdate.x =24;
-		 userdate.y=66;
-		 
+			var tipsText = new createjs.Text(_myQR.tipsText, "14px Georgia", _myQR.color1);
+				 tipsText.x = 24;
+				 tipsText.y=455;
+				 containerText.addChild(tipsText);
 
-		 containerText.addChild(userdate);
-	var tipsText = new createjs.Text("长按图片，识别二维码查阅", "14px Georgia", "black");
-		 tipsText.x = 24;
-		 tipsText.y=455;
-		 
+			var containerText2=containerText.children;
 
-		 containerText.addChild(tipsText);
+			for (var i = containerText2.length - 1; i >= 0; i--) {
+				 var containclone=containerText2[i].clone();
+				 containclone.x=containerText2[i].x-1;
+				  containclone.y=containerText2[i].y-2;
+				 containclone.filters = [new createjs.ColorFilter(255, 255, 255, 1, 255, 255, 255) 
+						 		];
 
-	var containerText2=containerText.children;
-for (var i = containerText2.length - 1; i >= 0; i--) {
-	 var containclone=containerText2[i].clone();
-	 containclone.x=containerText2[i].x-1;
-	  containclone.y=containerText2[i].y-2;
-	 containclone.filters = [new createjs.ColorFilter(255, 255, 255, 1, 255, 255, 255) 
-			 		];
-
-		containclone.cache(0,0, 480, 640);
-    	stage.addChild(containclone);
+					containclone.cache(0,0,_myQR.x,_myQR.y);
+			    	stage.addChild(containclone);
+			};
+				
+				stage.update();
 };
 
 
-	console.log(containerText.children);
-					
-					
 
-
+function readContent(){
 		
+		if (_myQR.QRContent=='') {
 
-		stage.update();
+			_myQR.QRContent= $('textarea').val()+'平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
+		}else{
+			_myQR.QRContent= $('textarea').val()+'                              >>>>>>凡得提供技术服务,微信服务号fandeshijian';
+		};
+		console.log(_myQR.QRContent);
+};
 
-	};
-
-
-var QRContent;
 function tranQR(){
-	QRContent='';
-	var content= $('#myGW').val();
+		if (_myQR.QRContent=='') {
+			_myQR.QRContent= '平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
+		};
 
-	
-	if (content=='') {
-
-		content= $('textarea').val()+'平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
-
-
-	}else{
-		content= $('textarea').val()+'                              >>>>>>凡得提供技术服务,微信服务号fandeshijian';
-
-
-	};
-
-	
-	console.log(content);
-	console.log(QRContent);
-
-		
 		var QRContent=$('#qrcodeCanvas').qrcode({
-			fill: "#162538",
+			fill: _myQR.color3,
         	// render method: 'canvas', 'image' or 'div'
 		    render: 'canvas',
 
@@ -219,15 +218,13 @@ function tranQR(){
 		    top: 0,
 
 		    // size in pixel
-		    size: 150,
-
-		    
+		    size:_myQR.QRsize,
 
 		    // background color or image element, null for transparent background
-		    background: '#FFF1A6',
+		    background: _myQR.color4,
 
 		    // content
-		    text: content,
+		    text: _myQR.QRContent,
 
 		    // corner radius relative to module width: 0.0 .. 0.5
 		    radius: 0,
@@ -249,22 +246,13 @@ function tranQR(){
 
 		    label: '所得',
 		    fontname: 'sans',
-		    fontcolor: 'black',
-
+		    fontcolor: _myQR.color1,
 		    image: null
-			
-		});	
-
-
+		});
 		if (QRContent) {
-
 			creatImgResult();
-
 		}else{
-
 			alert('保存失败，请再次保存')
-
-
 		};	
 
 };
@@ -272,9 +260,7 @@ function tranQR(){
 
 function creatImgResult(){
 	var canvas=$('#qrcodeCanvas canvas').last().get(0);
-		
-	
-		
+			
 		if ($(canvas).attr('id')=='true') {
 			console.log($(canvas).attr('id')=='true');
 				var data = canvas.toDataURL();
@@ -287,30 +273,27 @@ function creatImgResult(){
 
 
 			var myQRBitmap = new createjs.Bitmap(data);
-					myQRBitmap.rotation=0;//35
+					myQRBitmap.rotation=_myQR.rotation;//35
 					//12
 					//1
 					//0.8
 					
-					myQRBitmap.x=167;//300
-					myQRBitmap.y=247;
+					myQRBitmap.x=_myQR.BitmapX;//300
+					myQRBitmap.y=_myQR.BitmapY;
 
 			/*
 			var myQRBitmap2=myQRBitmap.clone();
 					myQRBitmap2.x=301;
 					myQRBitmap2.y=292;
 				
-			
-
-
 				myQRBitmap2.filters = [new createjs.ColorFilter(0, 0, 0, 0.8, 0, 0, 0) 
 			 		];
 
 				 		 myQRBitmap2.cache(0,0, 240, 240);
 	
-
 			stage.addChild(myQRBitmap2);
- */			stage.addChild(myQRBitmap);		
+ */			
+ 					stage.addChild(myQRBitmap);		
 /*
 				var image2 = new Image();
 				    image2.src = "http://www.fandesj.com/yifind/Public/img/QRimg/deskForestup.png";
@@ -325,20 +308,12 @@ function handleImageLoad2(){
 		stage.update();	
 };
 */
-						
-
-									 
-
 				
 				$(canvas).attr('id','false');
 				stage.update();
 				var myQRImage=$('#myQR').get(0).toDataURL("image/png");
 				$('#myQRImage').attr('src',myQRImage);				
-
-
 		};
-
-		
 }
 
 
@@ -360,8 +335,6 @@ function useDate(){
 	
 	var month=myDate.getMonth()+1;
 	var userDate='此时'+myDate.getFullYear()+'/'+month+'/'+myDate.getDate()+',此刻'+myDate.getHours()+':'+myDate.getMinutes();
-	
-
 	return 	userDate;
 		/*
 		myDate.getFullYear();    //获取完整的年份(4位,1970-????)
@@ -374,15 +347,6 @@ function useDate(){
 		*/
 		
 };
-
-
-
-
-
-
-
-$('#useDate').text(useDate());
-
 /*
 
 	var ca=$('#qrcodeCanvas canvas').get(0);
@@ -412,9 +376,6 @@ ca.onclick = function  (e) {
 	console.log(imagedata);
 }
 	*/
-var autotext=$('.weui_textarea').get(0);
- autoTextarea(autotext);
-
  /* 
   string 字符串; 
   str 指定字符; 
@@ -423,8 +384,7 @@ var autotext=$('.weui_textarea').get(0);
  */
 function getQueryString(name) {
         var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-        var r = window.location.search.substr(1).match(reg);
-        
+        var r = window.location.search.substr(1).match(reg);       
         if (r !== null){
         	return decodeURIComponent(r[2])
         	};        	
