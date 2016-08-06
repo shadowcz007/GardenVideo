@@ -193,9 +193,7 @@ function readContent(){
 };
 
 function tranQR(){
-		if (_myQR.QRContent=='') {
-			_myQR.QRContent= '平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
-		};
+		readContent();
 
 		var QRContent=$('#qrcodeCanvas').qrcode({
 			fill: _myQR.color3,
