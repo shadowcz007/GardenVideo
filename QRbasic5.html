@@ -70,33 +70,33 @@
             </ul>
 	</div>
 	<br>
-	<button class="weui_btn weui_btn_plain_primary" onclick="javascript:setTimeout(tranQR,500);tranQR();alert('已生成专属二维码，长按保存图片');">保存</button>
+	<button class="weui_btn weui_btn_plain_primary" onclick="javascript:tranQR();">保存</button>
  
 	</div>
 	<div class="pannel" style="width:100%;margin-left:0">
-		<img src="" alt="" id="myQRImage" style="width:90%;">
+		<img src="" id="myQRImage" style="width:90%;">
 
 	</div>
-	<canvas id="myQR" style="display:none"></canvas>
-	<div id="qrcodeCanvas" style="display:none"></div>
+	<canvas id="myQR" style=""></canvas>
+	<canvas id="qrcodeCanvas" width='300' height='300'></canvas>
 <script>
 	var _myQR={};
 	_myQR._boundx=$(window).width();
 	_myQR._boundy=$(window).height();
 	_myQR.x=480;
 	_myQR.y=800;
-	_myQR.QRsize=170;
+	_myQR.QRsize=215;
 	_myQR.jq=$('#myQR');
 	_myQR.dom=_myQR.jq.get(0);
 	_myQR.templete=new Image();
 	_myQR.templete.src="http://www.fandesj.com/yifind/Public/img/QRimg/jimi.png";
 	
 	_myQR.colorwhite=["white","black"];
-	_myQR.color3="#f2a600";//qr的fill颜色
-	_myQR.color4="#fbf254";//// background color or image element, null for transparent background
+	_myQR.color3="#ca8b01";//qr的fill颜色
+	_myQR.color4="#fffcb4";//// background color or image element, null for transparent background
 	_myQR.rotation=0;
-	_myQR.BitmapX=200;
-	_myQR.BitmapY=434;
+	_myQR.BitmapX=168;
+	_myQR.BitmapY=420;
 	_myQR.username=getQueryString("userName");
 	_myQR.userPic=getQueryString("userPicSrc");
 	_myQR.userinfo=_myQR.username+"的《所得》";
@@ -185,7 +185,7 @@ function readContent(){
 		
 		if (_myQR.QRContent=='') {
 
-			_myQR.QRContent= $('textarea').val()+'平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
+			_myQR.QRContent='平凡所得,知行合一'+'                          >>>>>>凡得提供技术服务,微信服务号fandeshijian';
 		}else{
 			_myQR.QRContent= $('textarea').val()+'                              >>>>>>凡得提供技术服务,微信服务号fandeshijian';
 		};
@@ -224,7 +224,7 @@ function tranQR(){
 		    radius: 0,
 
 		    // quiet zone in modules
-		    quiet: 0,
+		    quiet: 1,
 
 		    // modes
 		    // 0: normal
@@ -253,19 +253,10 @@ function tranQR(){
 
 
 function creatImgResult(){
-	var canvas=$('#qrcodeCanvas canvas').last().get(0);
+	var canvas=$('#qrcodeCanvas');
 			
-		if ($(canvas).attr('id')=='true') {
-			console.log($(canvas).attr('id')=='true');
-				var data = canvas.toDataURL();
-				if ($('#QRorigin')) {
-
-					$('#QRorigin').remove();
-					$('body').append('<img id=QRorigin src='+data+'>');
-
-				};
-
-
+				var data = canvas.attr('url64');
+				
 			var myQRBitmap = new createjs.Bitmap(data);
 					myQRBitmap.rotation=_myQR.rotation;//35
 					//12
@@ -302,12 +293,10 @@ function handleImageLoad2(){
 		stage.update();	
 };
 */
-				
-				$(canvas).attr('id','false');
 				stage.update();
 				var myQRImage=$('#myQR').get(0).toDataURL("image/png");
 				$('#myQRImage').attr('src',myQRImage);				
-		};
+		
 }
 
 
